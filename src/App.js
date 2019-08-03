@@ -8,15 +8,11 @@ import $ from "jquery";
 class App extends React.Component {
 
   //{/* Orientação a objetos: comportamento + estado */}
-  constructor(props) {
-    super(props);
-    this.state = {
-      lista: [],
-      nome:'',
-      email:'',
-      password:''
-    };
-    //Em enviaForm preciso saber os dados que serão usados. Serão usados os dados do componente enviado (this)
+  constructor() {
+    super();
+    this.state = {lista: [], nome:'', email:'', password:''};
+    //Em enviaForm preciso saber os dados que serão usados. 
+    //Serão usados os dados do componente enviado (this)
     //this.enviaForm = this.enviaForm.bind(this);
     this.setNome = this.setNome.bind(this);
     this.setEmail = this.setEmail.bind(this);
@@ -27,7 +23,10 @@ class App extends React.Component {
     $.ajax({
       url: "http://localhost:9090/autors",
       dataType: 'json',
+      //Deve inserir bind com this para associar ao state atual. 
+      //Por default, no callback é utilizado o this do jquery.
       success: function (resposta) {
+        //console.log("Enviado com sucesso");
         this.setState({ lista: resposta });
       }.bind(this)
     });
@@ -46,7 +45,8 @@ class App extends React.Component {
       data:JSON.stringify({nome:this.state.nome,email:this.state.email,password:this.state.password}),
       success: function(resposta){
         console.log("Enviado com sucesso");
-      },
+        this.setState({ lista: resposta });
+      }.bind(this),
       error: function(erro){
         console.log("Deu erro");
       }
@@ -74,11 +74,11 @@ class App extends React.Component {
         {/* Exemplo de Comentário */}
         <div id="menu">
           <div className="pure-menu">
-            <a className="pure-menu-heading" href="#">U can do it!</a>
+            <a className="pure-menu-heading" href="localhost:3000">U can do it!</a>
             <ul className="pure-menu-list">
-              <li className="pure-menu-item"><a href="#" className="pure-menu-link">Home</a></li>
-              <li className="pure-menu-item"><a href="#" className="pure-menu-link">Autor</a></li>
-              <li className="pure-menu-item"><a href="#" className="pure-menu-link">Livro</a></li>
+              <li className="pure-menu-item"><a href="localhost:3000" className="pure-menu-link">Home</a></li>
+              <li className="pure-menu-item"><a href="localhost:3000" className="pure-menu-link">Autor</a></li>
+              <li className="pure-menu-item"><a href="localhost:3000" className="pure-menu-link">Livro</a></li>
             </ul>
           </div>
         </div>
@@ -114,8 +114,9 @@ class App extends React.Component {
               <table className="pure-table">
                 <thead>
                   <tr>
+                    <th>Id</th>
                     <th>Nome</th>
-                    <th>email</th>
+                    <th>Email</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -123,6 +124,7 @@ class App extends React.Component {
                     this.state.lista.map(function (autor) {
                       return (
                         <tr key={autor.id}>
+                          <td>{autor.id}</td>
                           <td>{autor.nome}</td>
                           <td>{autor.email}</td>
                         </tr>
