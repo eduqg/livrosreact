@@ -2,69 +2,9 @@ import React from 'react';
 import './App.css';
 import './css/pure-min.css';
 import './css/side-menu.css';
-import $ from "jquery";
-import InputCustomizado from './components/inputCustomizado';
+import AutorBox from './Autor';
 
 class App extends React.Component {
-
-  //{/* Orientação a objetos: comportamento + estado */}
-  constructor() {
-    super();
-    this.state = {lista: [], nome:'', email:'', password:''};
-    //Em enviaForm preciso saber os dados que serão usados. 
-    //Serão usados os dados do componente enviado (this)
-    //this.enviaForm = this.enviaForm.bind(this);
-    this.setNome = this.setNome.bind(this);
-    this.setEmail = this.setEmail.bind(this);
-    this.setPassword = this.setPassword.bind(this);
-  }
-
-  componentDidMount() {
-    $.ajax({
-      url: "http://localhost:9090/autors",
-      dataType: 'json',
-      //Deve inserir bind com this para associar ao state atual. 
-      //Por default, no callback é utilizado o this do jquery.
-      success: function (resposta) {
-        //console.log("Enviado com sucesso");
-        this.setState({ lista: resposta });
-      }.bind(this)
-    });
-  }
-
-  enviaForm(eventoDisparado){
-    // Previne que o evento não continue sendo propagado pelo DOM 
-    // Sem esse preventDefault ocorre um erro no post de autores
-    eventoDisparado.preventDefault();
-    console.log("Dados sendo enviados");
-    $.ajax({
-      url:'http://localhost:9090/autors',
-      contentType:'application/json',
-      dataType:'json',
-      type:'post',
-      data:JSON.stringify({nome:this.state.nome,email:this.state.email,password:this.state.password}),
-      success: function(resposta){
-        console.log("Enviado com sucesso");
-        this.setState({ lista: resposta });
-      }.bind(this),
-      error: function(erro){
-        console.log("Deu erro");
-      }
-    });
-  }
-
-  setNome(evento){
-    this.setState({nome:evento.target.value})
-  }
-
-  setEmail(evento){
-    this.setState({email:evento.target.value})
-  }
-
-  setPassword(evento){
-    this.setState({password:evento.target.value})
-  }
-
   render() {
     return (
       <div id="layout">
@@ -90,42 +30,9 @@ class App extends React.Component {
           </div>
 
           <div className="content" id="content">
-            <div className="pure-form pure-form-aligned">
-              <form className="pure-form pure-form-aligned" onSubmit={this.enviaForm.bind(this)} method="post" >
-                <InputCustomizado id="nome" type="text" name="nome" value={this.state.nome} onChange={this.setNome} label="Nome" />
-                <InputCustomizado id="email" type="email" name="email" value={this.state.email} onChange={this.setEmail} label="Email" />
-                <InputCustomizado id="password" type="password" name="password" value={this.state.password} onChange={this.setPassword} label="Senha" />
-                <div className="pure-control-group">
-                  <label></label>
-                  <button type="submit" className="pure-button pure-button-primary">Gravar</button>
-                </div>
-              </form>
-            </div>
-            <div>
-              <table className="pure-table">
-                <thead>
-                  <tr>
-                    <th>Id</th>
-                    <th>Nome</th>
-                    <th>Email</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    this.state.lista.map(function (autor) {
-                      return (
-                        <tr key={autor.id}>
-                          <td>{autor.id}</td>
-                          <td>{autor.nome}</td>
-                          <td>{autor.email}</td>
-                        </tr>
-                      );
-                    })
-                  }
-                </tbody>
-              </table>
-            </div>
-
+            {/*Junta meus dois componentes de Formulario e Lista de Autores*/}
+            {/* Criar Box no react se chama High Order Component */}
+            <AutorBox />
           </div>
         </div>
       </div>
