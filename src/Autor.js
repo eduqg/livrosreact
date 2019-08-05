@@ -1,13 +1,13 @@
 import React from 'react';
 import $ from 'jquery';
 import InputCustomizado from './components/InputCustomizado';
+import PubSub from 'pubsub-js';
 
 export default class AutorBox extends React.Component {
     //{/* Orientação a objetos: comportamento + estado */}
     constructor() {
         super();
         this.state = { lista: [] };
-        this.atualizaListagemAutores = this.atualizaListagemAutores.bind(this);
     }
 
     componentDidMount() {
@@ -21,6 +21,11 @@ export default class AutorBox extends React.Component {
                 this.setState({ lista: resposta });
             }.bind(this)
         });
+
+        //Quero me inscrever nesse tópico, quando chegar um objeto novo ativo uma função
+        PubSub.subscribe('atualiza-lista-autores', function (topico, novaLista) {
+            this.setState({ lista: novaLista });
+        }.bind(this));
     }
 
     atualizaListagemAutores(novaLista) {
@@ -30,7 +35,7 @@ export default class AutorBox extends React.Component {
     render() {
         return (
             <div>
-                <FormularioAutor callbackAtualizaListagemAutores={this.atualizaListagemAutores} />
+                <FormularioAutor />
                 <TabelaAutores lista={this.state.lista} />
             </div>
         );
@@ -61,9 +66,12 @@ class FormularioAutor extends React.Component {
             dataType: 'json',
             type: 'post',
             data: JSON.stringify({ nome: this.state.nome, email: this.state.email, password: this.state.password }),
-            success: function (resposta) {
-                this.props.callbackAtualizaListagemAutores(resposta);
-            }.bind(this),
+            success: function (novaLista) {
+                //disparar um aviso geral de novaLista disponível
+                //publish and subscribe (npm install pubsub-js)
+                //Publico em um tópico de interesse para quem estiver ouvindo, e conteudo
+                PubSub.publish('atualiza-lista-autores', novaLista);
+            },
             error: function (erro) {
                 console.log("Deu erro");
             }
