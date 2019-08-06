@@ -3,45 +3,6 @@ import $ from 'jquery';
 import InputCustomizado from './components/InputCustomizado';
 import PubSub from 'pubsub-js';
 
-export default class AutorBox extends React.Component {
-    //{/* Orientação a objetos: comportamento + estado */}
-    constructor() {
-        super();
-        this.state = { lista: [] };
-    }
-
-    componentDidMount() {
-        $.ajax({
-            url: "http://localhost:9090/autors",
-            dataType: 'json',
-            //Deve inserir bind com this para associar ao state atual. 
-            //Por default, no callback é utilizado o this do jquery.
-            success: function (resposta) {
-                //console.log("Enviado com sucesso");
-                this.setState({ lista: resposta });
-            }.bind(this)
-        });
-
-        //Quero me inscrever nesse tópico, quando chegar um objeto novo ativo uma função
-        PubSub.subscribe('atualiza-lista-autores', function (topico, novaLista) {
-            this.setState({ lista: novaLista });
-        }.bind(this));
-    }
-
-    atualizaListagemAutores(novaLista) {
-        this.setState({ lista: novaLista });
-    }
-
-    render() {
-        return (
-            <div>
-                <FormularioAutor />
-                <TabelaAutores lista={this.state.lista} />
-            </div>
-        );
-    }
-}
-
 class FormularioAutor extends React.Component {
 
     constructor() {
@@ -134,6 +95,45 @@ class TabelaAutores extends React.Component {
                         }
                     </tbody>
                 </table>
+            </div>
+        );
+    }
+}
+
+export default class AutorBox extends React.Component {
+    //{/* Orientação a objetos: comportamento + estado */}
+    constructor() {
+        super();
+        this.state = { lista: [] };
+    }
+
+    componentDidMount() {
+        $.ajax({
+            url: "http://localhost:9090/autors",
+            dataType: 'json',
+            //Deve inserir bind com this para associar ao state atual. 
+            //Por default, no callback é utilizado o this do jquery.
+            success: function (resposta) {
+                //console.log("Enviado com sucesso");
+                this.setState({ lista: resposta });
+            }.bind(this)
+        });
+
+        //Quero me inscrever nesse tópico, quando chegar um objeto novo ativo uma função
+        PubSub.subscribe('atualiza-lista-autores', function (topico, novaLista) {
+            this.setState({ lista: novaLista });
+        }.bind(this));
+    }
+
+    atualizaListagemAutores(novaLista) {
+        this.setState({ lista: novaLista });
+    }
+
+    render() {
+        return (
+            <div>
+                <FormularioAutor />
+                <TabelaAutores lista={this.state.lista} />
             </div>
         );
     }
