@@ -2,6 +2,7 @@ import React from 'react';
 import $ from 'jquery';
 import InputCustomizado from './components/InputCustomizado';
 import PubSub from 'pubsub-js';
+import TratadorErros from './TratadorErros';
 
 class FormularioAutor extends React.Component {
 
@@ -32,9 +33,17 @@ class FormularioAutor extends React.Component {
                 //publish and subscribe (npm install pubsub-js)
                 //Publico em um tópico de interesse para quem estiver ouvindo, e conteudo
                 PubSub.publish('atualiza-lista-autores', novaLista);
-            },
+                //Atualiza campos para branco
+                //Se uso setState, uso bind(this) para não associar ao this do react
+                this.setState({ nome: '', email: '', password: '' });
+            }.bind(this),
             error: function (erro) {
-                console.log("Deu erro");
+                if (erro.status === 422) {
+                    new TratadorErros().publicaErros(erro.responseJSON);
+                }
+            },
+            beforeSend: function() {
+                PubSub.publish("limpa-erros",{});
             }
         });
     }
