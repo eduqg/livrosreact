@@ -42,8 +42,8 @@ class FormularioAutor extends React.Component {
                     new TratadorErros().publicaErros(erro.responseJSON);
                 }
             },
-            beforeSend: function() {
-                PubSub.publish("limpa-erros",{});
+            beforeSend: function () {
+                PubSub.publish("limpa-erros", {});
             }
         });
     }
@@ -141,8 +141,16 @@ export default class AutorBox extends React.Component {
     render() {
         return (
             <div>
-                <FormularioAutor />
-                <TabelaAutores lista={this.state.lista} />
+                <div className="header">
+                    <h1>Cadastro de Autores</h1>
+                </div>
+
+                <div className="content" id="content">
+                    {/*Junta meus dois componentes de Formulario e Lista de Autores*/}
+                    {/* Criar <AutorBox /> Box no react se chama High Order Component */}
+                    <FormularioAutor />
+                    <TabelaAutores lista={this.state.lista} />
+                </div>
             </div>
         );
     }
