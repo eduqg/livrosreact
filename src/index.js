@@ -8,6 +8,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import AutorBox from './Autor';
+import LivroBox from './Livro';
 import Home from './Home';
 
 // Posso colocar <App /> ou React.createElement(App)
@@ -16,7 +17,7 @@ ReactDOM.render(
         <App>
             <Route exact path="/" component={Home} />
             <Route path="/autor" component={AutorBox} />
-            <Route path="/livro" />
+            <Route path="/livro" component={LivroBox} />
         </App>
     </Router>),
     document.getElementById('root')
