@@ -10,10 +10,12 @@ export default class InputCustomizado extends React.Component {
 
     render() {
         //Props guarda todos os parametros que foram enviados para esse componente.
+        // Spread operator (...) no JSX é usado também para repassar todos os parametros
+        // Ou seja, "spread", quero espalhar todas as informações que foram passadas para esse componente em
         return (
             <div className="pure-control-group">
                 <label htmlFor={this.props.id}>{this.props.label}</label>
-                <input id={this.props.id} type={this.props.type} name={this.props.name} value={this.props.value} onChange={this.props.onChange} />
+                <input {...this.props} />
                 <span className="ccsdoerro">{this.state.msgErro}</span>
             </div>
         );
