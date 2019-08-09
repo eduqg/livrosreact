@@ -95,8 +95,8 @@ class TabelaLivros extends React.Component {
                                     <tr key={livro.id}>
                                         <td>{livro.id}</td>
                                         <td>{livro.titulo}</td>
-                                        <td>{livro.preco}</td>
-                                        <td>{livro.autor_id}</td>
+                                        <td>{livro.preco} R$</td>
+                                        <td>{livro.autor_name}</td>
                                     </tr>
                                 );
                             })
